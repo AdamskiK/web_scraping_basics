@@ -2,6 +2,7 @@ from contextlib import closing
 from requests import get
 from requests.exceptions import RequestException
 from bs4 import BeautifulSoup
+import numpy as np
 
 def simple_get(url):
     """
@@ -40,7 +41,14 @@ def log_error(e):
     print(e)
 
 
+# raw_html = simple_get('http://www.fabpedigree.com/james/mathmen.htm')
+raw_html = simple_get('https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)')
+html = BeautifulSoup(raw_html, 'html.parser')
+html = html.findAll("table", {"class" : "wikitable sortable"})
 
+countries = [tag.get("title") for tag in html[2].findAll("a")]
+countries.remove("Gross world product")
+rank_gdp = [item.text for item in html[2].findAll("td", {"align" : "right"})]
 
 
 
